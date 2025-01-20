@@ -46,11 +46,11 @@ export const DataInput = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         try {
-            const res = await sendData(features, alternatives, matrix, weights)
-            if (res.status !== 'success')
+            const data = await sendData(features, alternatives, matrix, weights)
+            if (data.status !== 'success')
                 console.log('ERROR')
             else {
-                console.log('success')
+                navigate("/results", { state: { data } })
             }
         }
         catch (err) {

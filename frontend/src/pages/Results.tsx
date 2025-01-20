@@ -5,7 +5,6 @@ import { matrixInterface, matrixInterface_snake, resultsInterface } from '../int
 import styled from 'styled-components';
 import { MatrixTable } from '../components/MatrixTable';
 import { MatrixDetails } from '../components/MatrixDetails';
-import { resetAll } from '../utils/net';
 
 
 const MatrixesContainer = styled.div`
@@ -34,14 +33,17 @@ const MatrixDataContainer = styled.div`
 
 const colors = ['lightcoral', 'khaki', 'lawngreen', 'aqua']
 
+type Ranking = Array<{ feature_name: string, score: number }>
+
 
 export const Results = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const data = location.state?.data;
 
-    const [results, setResults] = useState<resultsInterface[]>([]);
-    const [matrixes, setMatrixes] = useState<matrixInterface[]>([]);
+    const [ranking, setRanking] = useState<Ranking>([]);
+    const [p_dist, set_p_dist] = useState<number[]>([]);
+    const [n_dist, set_n_dist] = useState<number[]>([]);
 
     useEffect(() => {
         if (data === undefined) {
@@ -49,91 +51,55 @@ export const Results = () => {
             return
         }
 
-        // results (leaderboard)
-        let handleResults: resultsInterface[] = []
-        for (const [altName, value] of Object.entries(data.results) as [string, number][]) {
-            handleResults.push({
-                altName: altName,
-                value: value
-            })
-        }
-        handleResults.sort((a, b) => b.value - a.value);
-
-        // matrixes
-        let handleMatrixes: matrixInterface[] = []
-        data.matrixes.forEach((matrix: matrixInterface_snake) => {
-            handleMatrixes.push({
-                consistencyRatio: matrix.consistency_ratio,
-                inconsistencyIndex: matrix.inconsistency_index,
-                criteriaName: matrix.criteria_name,
-                dimension: matrix.dimension,
-                elementsNames: matrix.elements_names,
-                elementsRatioMatrix: matrix.elements_ratio_matrix,
-                enforceTransitivityRule: matrix.enforce_transitivity_rule
-            })
-        })
-
-        // set states
-        setResults(handleResults)
-        setMatrixes(handleMatrixes)
+        setRanking(data.ranking)
+        set_p_dist(data.p_dist)
+        set_n_dist(data.n_dist)
     }, [])
 
     const handleClick = async () => {
-        try {
-            const res = await resetAll()
-            if (res.status !== 'success') {
-                console.log('error')
-            }
-            navigate("/")
-        }
-        catch (err) {
-            console.log(err)
-        }
+        navigate("/")
     }
 
     const showLeaderboard = () => {
         const elements: ReactElement[] = []
-        results.forEach((result, index) => {
+        ranking.forEach((ranking, index) => {
             if (index === 0)
-                elements.push(<li key={index}><p style={{ fontWeight: "bold", fontSize: "larger" }}>{result.altName}: {result.value}</p></li>)
+                elements.push(<li key={index}><p style={{ fontWeight: "bold", fontSize: "larger" }}>{ranking.feature_name}: {ranking.score}</p></li>)
             else
-                elements.push(<li key={index}>{result.altName}: {result.value}</li>)
+                elements.push(<li key={index}>{ranking.feature_name}: {ranking.score}</li>)
         })
 
         return elements
     }
 
-    const showMatrixes = () => {
+    const showDists = () => {
         const elements: ReactElement[] = []
 
-        matrixes.forEach((matrix, i) => {
-            elements.push(
-                <MatrixContainer key={i} style={{ backgroundColor: colors[i % colors.length] }}>
-                    <h3>{matrix.criteriaName}</h3>
-                    <MatrixDataContainer>
-                        <MatrixDetails matrix={matrix} />
-                        <MatrixTable matrix={matrix} />
-                    </MatrixDataContainer>
-                </MatrixContainer>
-            )
+        elements.push(<h3 key={0}>p_dist:</h3>)
+        p_dist.forEach((val, i) => {
+            elements.push(<p key={"p_" + i}>{val}</p>)
         })
+
+        elements.push(<h3 key={1}>n_dist:</h3>)
+        n_dist.forEach((val, i) => {
+            elements.push(<p key={"n_" + i}>{val}</p>)
+        })
+
         return elements
     }
 
     return (
         <PageContainer>
-            <h1>The best alternative is {results.length > 0 ? results[0].altName + "" : ""}</h1>
+            <h1>The best alternative is {ranking.length > 0 ? ranking[0].feature_name + "" : ""}</h1>
             <ol>
                 {showLeaderboard()}
             </ol>
+            <div>
+                {showDists()}
+            </div>
             <ButtonsDiv>
                 <Button onClick={handleClick}>Back to home page</Button>
             </ButtonsDiv>
-            <p><b>Used method</b>: {data?.method}</p>
-            <MatrixesContainer>
-                <h3>Matrixes:</h3>
-                {showMatrixes()}
-            </MatrixesContainer>
         </PageContainer>
     )
 }
