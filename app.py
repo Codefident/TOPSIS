@@ -29,11 +29,19 @@ def get_data():
     weights = data.get('weights')
 
     criteria_impact = []
-    for _, is_desc in features:
-        if is_desc:
+    for feature in features:
+        if feature['isDesc']:
             criteria_impact.append("-")
         else:
             criteria_impact.append("+")
+
+    print("PARAMS")
+    print(f"products: {alternatives}")
+    print(f"categories: {features}")
+    print(f"weights: {weights}")
+    print(f"criteria_impact: {criteria_impact}")
+    print(f"matrix")
+    print(matrix)
 
     comparison_matrix = ComparisonMatrix(
         products=alternatives,
@@ -52,12 +60,12 @@ def get_data():
     p_dist, n_dist = topsis.calculate_distances()
     score = topsis.calculate_rank()
     
-    zipped = zip(features, score)
+    zipped = zip(alternatives, score)
     ranking = []
 
     for element in zipped:
         ranking.append({
-            'feature_name': element[0]['name'],
+            'alternative': element[0],
             'score': round(element[1] * 1000) / 1000
         })
 

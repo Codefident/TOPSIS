@@ -33,7 +33,7 @@ const MatrixDataContainer = styled.div`
 
 const colors = ['lightcoral', 'khaki', 'lawngreen', 'aqua']
 
-type Ranking = Array<{ feature_name: string, score: number }>
+type Ranking = Array<{ alternative: string, score: number }>
 
 
 export const Results = () => {
@@ -64,9 +64,9 @@ export const Results = () => {
         const elements: ReactElement[] = []
         ranking.forEach((ranking, index) => {
             if (index === 0)
-                elements.push(<li key={index}><p style={{ fontWeight: "bold", fontSize: "larger" }}>{ranking.feature_name}: {ranking.score}</p></li>)
+                elements.push(<li key={index}><p style={{ fontWeight: "bold", fontSize: "larger" }}>{ranking.alternative}: {ranking.score}</p></li>)
             else
-                elements.push(<li key={index}>{ranking.feature_name}: {ranking.score}</li>)
+                elements.push(<li key={index}>{ranking.alternative}: {ranking.score}</li>)
         })
 
         return elements
@@ -90,7 +90,7 @@ export const Results = () => {
 
     return (
         <PageContainer>
-            <h1>The best alternative is {ranking.length > 0 ? ranking[0].feature_name + "" : ""}</h1>
+            <h1>The best alternative is {ranking.length > 0 ? ranking[0].alternative + "" : ""}</h1>
             <ol>
                 {showLeaderboard()}
             </ol>

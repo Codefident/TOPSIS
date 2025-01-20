@@ -48,11 +48,15 @@ def main() -> None:
 
     for elem in zipped:
         ranking.append({
-            'feature_name': elem[0],
+            'product_name': elem[0],
             'score': elem[1]
         })
 
-    print(f"Ranking: {ranking}")
+    ranking.sort(key=lambda x: x['score'], reverse=True)
+    
+    print("Ranking")
+    for i, elem in enumerate(ranking):
+        print(f"{i+1}. {elem['product_name']}: {elem['score']}")
 
 
 if __name__ == "__main__":
