@@ -43,6 +43,9 @@ def main() -> None:
 
     print(topsis.comparison_matrix)
 
+    ranking = list(zip(products, score))
+    print(f"Ranking: {ranking}")
+
 
 if __name__ == "__main__":
     main()
