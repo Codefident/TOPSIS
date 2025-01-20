@@ -43,6 +43,17 @@ def main() -> None:
 
     print(topsis.comparison_matrix)
 
+    zipped = zip(products, score)
+    ranking = []
+
+    for elem in zipped:
+        ranking.append({
+            'feature_name': elem[0],
+            'score': elem[1]
+        })
+
+    print(f"Ranking: {ranking}")
+
 
 if __name__ == "__main__":
     main()
