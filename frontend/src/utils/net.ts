@@ -1,6 +1,6 @@
 import { featureInterface } from "../interfaces/interfaces"
 
-const SERVER_URL = "http://127.0.0.1:3001"
+const SERVER_URL = "http://127.0.0.1:2137"
 
 
 export const sendData = async (features: featureInterface[], alternatives: string[], matrix: number[][], weights: number[]) => {

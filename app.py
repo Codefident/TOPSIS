@@ -5,7 +5,7 @@ from topsis_app.comparison_matrix import ComparisonMatrix
 from topsis_app.topsis_algorithm import TopsisCalculator
 
 
-PORT_NUMBER = 3001
+PORT_NUMBER = 2137
 
 app = Flask(__name__)
 CORS(app)
