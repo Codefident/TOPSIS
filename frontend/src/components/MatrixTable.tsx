@@ -17,24 +17,23 @@ const MatrixTd = styled.td`
 const MatrixTr = styled.tr``
 
 
-export const MatrixTable = (props: { matrix: matrixInterface }) => {
+export const MatrixTable = (props: { matrix: [][] }) => {
 
     const generateRows = () => {
         const matrix = props.matrix
         let rows: ReactElement[] = []
         let cells: ReactElement[] = []
 
-        cells.push(<MatrixTd key={0}></MatrixTd>)
-        matrix.elementsNames.forEach((elementName, i) => {
-            cells.push(<MatrixTd key={i + 1}><b>{elementName}</b></MatrixTd>)
-        })
-        rows.push(<MatrixTr key={0}>{cells}</MatrixTr>)
+        if (matrix.length == 0)
+            return
 
-        matrix.elementsRatioMatrix.forEach((row, i) => {
+        matrix.forEach((row, i) => {
             cells = []
-            cells.push(<MatrixTd key={i}><b>{matrix.elementsNames[i]}</b></MatrixTd>)
-            row.forEach((value, j) => {
-                cells.push(<MatrixTd key={j + i + 1}>{value}</MatrixTd>)
+            row.forEach((element, j) => {
+                if (i == 0 || j == 0)
+                    cells.push(<MatrixTd key={'' + i + '_' + j}><b>{element}</b></MatrixTd>)
+                else
+                    cells.push(<MatrixTd key={'' + i + '_' + j}>{element}</MatrixTd>)
             })
             rows.push(<MatrixTr key={i + 1}>{cells}</MatrixTr>)
         })

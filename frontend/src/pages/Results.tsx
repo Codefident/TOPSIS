@@ -44,6 +44,8 @@ export const Results = () => {
     const [ranking, setRanking] = useState<Ranking>([]);
     const [p_dist, set_p_dist] = useState<number[]>([]);
     const [n_dist, set_n_dist] = useState<number[]>([]);
+    const [comparisonMatrix, setComparisonMatrix] = useState<[][]>([]);
+    const [topsisMatrix, settopsisMatrix] = useState<[][]>([]);
 
     useEffect(() => {
         if (data === undefined) {
@@ -51,9 +53,14 @@ export const Results = () => {
             return
         }
 
+        console.log(data.comparison_matrix)
+        console.log(data.topsis_matrix)
+
         setRanking(data.ranking)
         set_p_dist(data.p_dist)
         set_n_dist(data.n_dist)
+        setComparisonMatrix(data.comparison_matrix)
+        settopsisMatrix(data.topsis_matrix)
     }, [])
 
     const handleClick = async () => {
@@ -88,6 +95,32 @@ export const Results = () => {
         return elements
     }
 
+    const showMatrixes = () => {
+        const elements: ReactElement[] = []
+
+        // comparison
+        elements.push(
+            <MatrixContainer key={0}>
+                <h3>Initial comparison matrix (data)</h3>
+                <MatrixDataContainer>
+                    <MatrixTable matrix={comparisonMatrix} />
+                </MatrixDataContainer>
+            </MatrixContainer>
+        )
+
+        // topsis
+        elements.push(
+            <MatrixContainer key={0}>
+                <h3>Topsis result matrix</h3>
+                <MatrixDataContainer>
+                    <MatrixTable matrix={topsisMatrix} />
+                </MatrixDataContainer>
+            </MatrixContainer>
+        )
+
+        return elements
+    }
+
     return (
         <PageContainer>
             <h1>The best alternative is {ranking.length > 0 ? ranking[0].alternative + "" : ""}</h1>
@@ -97,6 +130,10 @@ export const Results = () => {
             <div>
                 {showDists()}
             </div>
+            <MatrixesContainer>
+                <h3>Matrixes:</h3>
+                {showMatrixes()}
+            </MatrixesContainer>
             <ButtonsDiv>
                 <Button onClick={handleClick}>Back to home page</Button>
             </ButtonsDiv>

@@ -1,6 +1,6 @@
 import React, { FormEvent, ReactElement, useState } from 'react'
 import styled from 'styled-components'
-import { SectionTitle } from '../utils/styledComponents'
+import { InputButton, InputText, SectionTitle } from '../utils/styledComponents'
 
 
 const Container = styled.div`
@@ -64,16 +64,18 @@ export const FormAlternatives = (props: propsType) => {
                 <p>Add alternative</p>
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <input
+                        <InputText
                             name='alternative_input'
                             type='text'
-                            placeholder='alternative_name'
+                            placeholder='Alternative name'
                             value={altName}
                             onChange={e => setAltName(e.target.value)}
+                            style={{ marginRight: '10px' }}
                         />
-                        <input
+                        <InputButton
                             type="submit"
                             value="Add"
+                            style={{ border: 'none' }}
                         />
                     </div>
                 </form>

@@ -55,6 +55,22 @@ export const ButtonSecondary = styled.button`
     }
 `;
 
+export const InputText = styled.input`
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    min-width: 80px;
+    font-weight: bold;
+    color: black;
+    background-color: white;
+    transition: 0.3s;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.6); /* Subtelny cień wokół inputu */
+    }
+`;
+
 export const InputButton = styled.input`
     padding: 10px;
     border: 3px solid black;

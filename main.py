@@ -23,7 +23,7 @@ def main() -> None:
         data_matrix=comparison_data,
         criteria_name="Model",
     )
-    print(comparison_matrix)
+    print(comparison_matrix.get_visualisation_matrix())
 
     topsis = TopsisCalculator(
         comparison_matrix=comparison_matrix,

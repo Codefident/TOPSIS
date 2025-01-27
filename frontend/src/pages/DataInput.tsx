@@ -1,11 +1,12 @@
 import React, { FormEvent, ReactElement, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ButtonsDiv, InputButton, PageContainer } from '../utils/styledComponents';
+import { ButtonsDiv, InputButton, InputText, PageContainer } from '../utils/styledComponents';
 import { featureInterface } from '../interfaces/interfaces';
 import { sendData } from '../utils/net';
 
 
-type Matrix = Array<Array<number>>
+type Vector = Array<number | string>
+type Matrix = Array<Vector>
 
 export const DataInput = () => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export const DataInput = () => {
     const [features, setFeatures] = useState<featureInterface[]>([]);
     const [alternatives, setAlternatives] = useState<string[]>([]);
     const [matrix, setMatrix] = useState<Matrix>([]);
-    const [weights, setWeights] = useState<number[]>([]);
+    const [weights, setWeights] = useState<Vector>([]);
 
     useEffect(() => {
         if (data === undefined) {
@@ -45,8 +46,14 @@ export const DataInput = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
+
         try {
-            const data = await sendData(features, alternatives, matrix, weights)
+            //@ts-ignore
+            let matrixToSend: number[][] = matrix
+            //@ts-ignore
+            let weightsToSend: number[] = weights
+
+            const data = await sendData(features, alternatives, matrixToSend, weightsToSend)
             if (data.status !== 'success')
                 console.log('ERROR')
             else {
@@ -71,15 +78,17 @@ export const DataInput = () => {
         const elements: ReactElement[] = []
         matrix[row].forEach((elem, col) => {
             elements.push(<td key={'td_' + row + '_' + col}>
-                <input
+                <InputText
                     type='number'
                     step={0.1}
                     value={elem}
                     onChange={e => setMatrix(prev => {
                         let newMatrix: Matrix = [...prev]
-                        newMatrix[row][col] = parseFloat(e.target.value)
+                        newMatrix[row][col] = e.target.value.length > 0 ? parseFloat(e.target.value) : ""
                         return newMatrix
                     })}
+                    style={{ width: 'auto' }}
+                    required
                 />
             </td>)
         })
@@ -105,21 +114,25 @@ export const DataInput = () => {
         const elements: ReactElement[] = []
 
         weights.forEach((weight, index) => {
-            elements.push(<li key={"li_" + index}>
-                <label>
+            elements.push(<tr key={"li_" + index}>
+                <th>
                     {features[index].name}
-                    <input
+                </th>
+                <td>
+                    <InputText
                         type='number'
                         step={0.1}
                         value={weight}
+                        min={0}
                         onChange={e => setWeights(prev => {
                             let newWeights = [...prev]
-                            newWeights[index] = parseFloat(e.target.value)
+                            newWeights[index] = e.target.value.length > 0 ? parseFloat(e.target.value) : ""
                             return newWeights
                         })}
+                        required
                     />
-                </label>
-            </li>)
+                </td>
+            </tr>)
         })
 
         return elements
@@ -138,9 +151,11 @@ export const DataInput = () => {
                     </tbody>
                 </table>
                 <h3>Weights:</h3>
-                <ul>
-                    {displayWeights()}
-                </ul>
+                <table>
+                    <tbody>
+                        {displayWeights()}
+                    </tbody>
+                </table>
                 <ButtonsDiv>
                     <InputButton
                         type='submit'

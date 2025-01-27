@@ -13,7 +13,7 @@ class ComparisonMatrix:
     def add_col(self, col_name: str, elements: list[Any]) -> None:
         self.additional_columns.append((elements, col_name))
 
-    def __repr__(self):
+    def get_visualisation_matrix(self, round_to=0):
         n = len(self.products) + 1
         m = len(self.categories) + 1
 
@@ -28,15 +28,27 @@ class ComparisonMatrix:
 
         for i in range(1, n):
             for j in range(1, m):
-                visualisation_matrix[i][j] = self.data_matrix[i - 1][j - 1]
+                if round_to == 0:
+                    visualisation_matrix[i][j] = self.data_matrix[i - 1][j - 1]
+                else:
+                    visualisation_matrix[i][j] = round(self.data_matrix[i - 1][j - 1] * (10 ** round_to)) / (10 ** round_to)
 
         for j in range(extra_col):
             visualisation_matrix[0][m + j] = self.additional_columns[j][1]
         for i in range(1, n):
             for j in range(extra_col):
-
                 visualisation_matrix[i][m+j] = self.additional_columns[j][0][i-1]
 
+        return visualisation_matrix
+
+    def __repr__(self):
+        n = len(self.products) + 1
+        m = len(self.categories) + 1
+        extra_col = len(self.additional_columns)
+
+        visualisation_matrix = self.get_visualisation_matrix()
+
+        extra_col = len(self.additional_columns)
         col_width = max(len(str(item)) for row in visualisation_matrix for item in row if item is not None) + 2
 
         def format_row(row):

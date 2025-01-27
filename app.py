@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from copy import deepcopy
 
 from topsis_app.comparison_matrix import ComparisonMatrix
 from topsis_app.topsis_algorithm import TopsisCalculator
 
 
-PORT_NUMBER = 2137
+PORT_NUMBER = 21370
 
 app = Flask(__name__)
 CORS(app)
@@ -28,16 +29,19 @@ def get_data():
     matrix = data.get('matrix')
     weights = data.get('weights')
 
+    features_names = []
     criteria_impact = []
     for feature in features:
         if feature['isDesc']:
             criteria_impact.append("-")
         else:
             criteria_impact.append("+")
+        features_names.append(feature['name'])
+        
 
     print("PARAMS")
     print(f"products: {alternatives}")
-    print(f"categories: {features}")
+    print(f"categories: {features_names}")
     print(f"weights: {weights}")
     print(f"criteria_impact: {criteria_impact}")
     print(f"matrix")
@@ -45,13 +49,13 @@ def get_data():
 
     comparison_matrix = ComparisonMatrix(
         products=alternatives,
-        categories=features,
+        categories=features_names,
         data_matrix=matrix,
         criteria_name="Model",
     )
 
     topsis = TopsisCalculator(
-        comparison_matrix=comparison_matrix,
+        comparison_matrix=deepcopy(comparison_matrix),
         weight_matrix=weights,
         criteria_impact=criteria_impact,
     )
@@ -76,7 +80,9 @@ def get_data():
         'status': 'success',
         'ranking': ranking,
         'p_dist': p_dist,
-        'n_dist': n_dist
+        'n_dist': n_dist,
+        'comparison_matrix': comparison_matrix.get_visualisation_matrix(),
+        'topsis_matrix': topsis.comparison_matrix.get_visualisation_matrix(3)
     })
 
 
