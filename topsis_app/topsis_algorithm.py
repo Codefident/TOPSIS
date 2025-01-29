@@ -98,7 +98,7 @@ class TopsisCalculator:
         positive_distances, negative_distances = self.calculate_distances()
         scores = [
             negative_distances[k] / (negative_distances[k] + positive_distances[k])
-            for k in range(self.col_number)
+            for k in range(self.row_number)
         ]
         sorted_scores = sorted(scores, reverse=True)
 

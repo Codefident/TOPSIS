@@ -17,6 +17,19 @@ def main() -> None:
 
     criteria_impact = ["+", "+", "+", "+", "-"]
 
+    products = ["Qashqai", "Ibiza", "Chr", "ZS"]
+    categories = ["Moc", "Spalanie", "Bagażnik", "Miejsce", "Cena"]
+    comparison_data = [
+        [140, 6.5, 430, 10, 86000],
+        [75, 4.5, 292, 5, 28000],
+        [122, 4.7, 388, 7, 95000],
+        [198, 5.5, 443, 8, 110000]
+    ]
+
+    weights = [1, 1.3, 1.5, 2, 2]
+
+    criteria_impact = ["+", "-", "+", "+", "-"]
+
     comparison_matrix = ComparisonMatrix(
         products=products,
         categories=categories,
@@ -30,7 +43,7 @@ def main() -> None:
         weight_matrix=weights,
         criteria_impact=criteria_impact,
     )
-
+    topsis.normalize_weight_matrix()
     topsis.normalize_data_matrix()
     print(*topsis.comparison_matrix.data_matrix, sep="\n")
 
