@@ -16,9 +16,9 @@ export const sendData = async (features: featureInterface[], alternatives: strin
             weights: weights
         })
     }
-    const response = await fetch(SERVER_URL + "/sendData", options)
+    const response = await fetch(SERVER_URL + "/send-data", options)
     if(!response.ok)
-        throw new Error('HTTP sendGetResult error')
+        throw new Error('HTTP send-get-result error, response status: ' + response.status)
     const data = await response.json()
     return data
 }

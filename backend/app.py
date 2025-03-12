@@ -19,7 +19,7 @@ weights = []
 
 
 
-@app.post('/sendData')
+@app.post('/send-data')
 def get_data():
     global features, alternatives, matrix, weights
 
